@@ -9,7 +9,7 @@
 
 
 using namespace std;
-std::ofstream ofs("distancia.txt");
+std::ofstream ofs("d5000.txt");
 
 double random(double low, double high) {
     double f = (double)rand() / RAND_MAX;
