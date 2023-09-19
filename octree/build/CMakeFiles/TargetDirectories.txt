@@ -1,0 +1,3 @@
+/Users/mauricioapaza/Desktop/EDA/octree/build/CMakeFiles/MyVTKApp.dir
+/Users/mauricioapaza/Desktop/EDA/octree/build/CMakeFiles/edit_cache.dir
+/Users/mauricioapaza/Desktop/EDA/octree/build/CMakeFiles/rebuild_cache.dir
