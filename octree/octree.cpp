@@ -3,6 +3,7 @@
 #include <sstream>
 #include <fstream>
 #include <string>
+#include <math.h>
 
 #define NOMBRE_ARCHIVO "points.csv"
 using namespace std;
@@ -125,6 +126,37 @@ void Octree::insert(const Point &p){
     return;
 }
 
+Point Octree::find_closest( const Point &p, int radius) const{
+    if(p.x < bottomLeft.x || p.x > bottomLeft.x + h || p.y < bottomLeft.y || p.y > bottomLeft.y + h || p.z < bottomLeft.z || p.z > bottomLeft.z + h ) return Point(0,0,0);
+    if(points != nullptr){
+        if(p.x == points->x && p.y == points->y && p.z == points->z) return p;
+        return Point(0,0,0);
+    }
+
+    int child = 0;
+    double childH = h / 2.0;
+    if(p.x > bottomLeft.x + childH) child |= 1;
+    if(p.y > bottomLeft.y + childH) child |= 2;
+    if(p.z > bottomLeft.z + childH) child |= 4;
+
+    Point k = children[child]->find_closest(p, 0);
+
+    if(k.x == 0 && k.y == 0 && k.z == 0){
+        return Point(0,0,0);
+    }
+
+    double dist = 1e6;
+    for(int i = 0; i < 8; i++){
+        if(children[i]->points != nullptr){
+            double ndist = sqrt(pow((p.x - children[i]->points->x),2) + pow((p.y - children[i]->points->y),2) + pow((p.z - children[i]->points->z),2));
+            if(ndist < dist){
+                k = Point(children[i]->points->x, children[i]->points->y, children[i]->points->z);
+                dist = ndist;
+            }
+        }
+    }
+    return k;
+}
 
 void Insercion_Datos(){
     ifstream archivo(NOMBRE_ARCHIVO);
@@ -163,6 +195,8 @@ void Insercion_Datos(){
     }
     cout << tree.exist(Point(95,105,-34)) << endl;
     cout << tree.exist(Point(117,10.6999,-38)) << endl;
+    Point m = tree.find_closest(Point(117,10.6999,-38),0);
+    cout << m.x << " " << m.y << " " << m.z << endl;
     return;
 }
 
